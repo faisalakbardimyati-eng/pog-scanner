@@ -1172,77 +1172,141 @@ function kirimBarcode(
 
 }
 
-
 // =====================================================
-// STOP SCANNER
+// KEMBALI KE HALAMAN INDEX
 // =====================================================
 
-async function stopScanner(
-  tampilStatus = true
-) {
-
-
-  if (!scanner) {
-
-    scanning = false;
-
-    starting = false;
-
-    updateButtons();
-
-    return;
-
-  }
-
+function kembaliKeIndex() {
 
   try {
 
+    // Jika scanner dibuka sebagai popup
+    // dari halaman Index
+    if (
+      window.opener &&
+      !window.opener.closed
+    ) {
 
-    if (scanning) {
+      window.close();
 
-      await scanner.stop();
+      return;
 
     }
 
 
+    // Jika window.close() tidak berhasil,
+    // gunakan history browser
+    if (
+      window.history.length > 1
+    ) {
+
+      window.history.back();
+
+      return;
+
+    }
+
+
+    // Fallback
+    window.location.href = 'index.html';
+
   } catch (error) {
 
-    console.warn(
-      'Scanner stop:',
+    console.error(
+      'Gagal kembali ke Index:',
       error
     );
 
-  }
-
-
-  try {
-
-    scanner.clear();
-
-  } catch (error) {
-
-    console.warn(
-      'Scanner clear:',
-      error
-    );
+    window.location.href =
+      'index.html';
 
   }
 
+}
 
+// =====================================================
+// STOP SCANNER + KEMBALI KE INDEX
+// =====================================================
+
+async function stopScanner(
+  kembali = true
+) {
+
+  starting = false;
+
+
+  // Simpan instance scanner
+  const currentScanner =
+    scanner;
+
+
+  // Reset state
   scanner = null;
 
   scanning = false;
-
-  starting = false;
 
 
   updateButtons();
 
 
-  if (tampilStatus) {
+  // ===============================================
+  // STOP CAMERA
+  // ===============================================
+
+  if (currentScanner) {
+
+    try {
+
+      await currentScanner.stop();
+
+    } catch (error) {
+
+      console.warn(
+        'STOP CAMERA:',
+        error
+      );
+
+    }
+
+
+    // =============================================
+    // CLEAR CAMERA
+    // =============================================
+
+    try {
+
+      currentScanner.clear();
+
+    } catch (error) {
+
+      console.warn(
+        'CLEAR CAMERA:',
+        error
+      );
+
+    }
+
+  }
+
+
+  // ===============================================
+  // KEMBALI KE INDEX
+  // ===============================================
+
+  if (kembali) {
 
     status(
-      'Kamera ditutup'
+      '✓ Kamera ditutup'
+    );
+
+
+    setTimeout(
+      function() {
+
+        kembaliKeIndex();
+
+      },
+      150
     );
 
   }
