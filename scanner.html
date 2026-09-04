@@ -52,6 +52,7 @@
       font-family: Arial, sans-serif;
 
       -webkit-text-size-adjust: 100%;
+
       touch-action: manipulation;
 
     }
@@ -79,24 +80,26 @@
 
       text-align: center;
 
-      font-size: 20px;
+      font-size: 19px;
 
-      margin: 10px 0 15px;
+      margin: 8px 0 12px;
 
     }
 
 
-    /* ============================
+    /* =========================================
        CAMERA
-       ============================ */
+       ========================================= */
 
     #reader {
 
       width: 100%;
 
+      height: auto;
+
       min-height: 280px;
 
-      margin-top: 10px;
+      margin-top: 8px;
 
       background: #000;
 
@@ -109,14 +112,24 @@
     }
 
 
-    /*
-      Hilangkan beberapa elemen bawaan
-      html5-qrcode yang tidak diperlukan
-    */
+    #reader video {
+
+      width: 100% !important;
+
+      height: auto !important;
+
+      max-height: 65vh;
+
+      object-fit: cover !important;
+
+      border-radius: 10px;
+
+    }
+
 
     #reader__dashboard {
 
-      padding: 8px !important;
+      padding: 5px !important;
 
     }
 
@@ -128,34 +141,98 @@
     }
 
 
-    #reader video {
+    #reader__camera_selection {
 
-      width: 100% !important;
-
-      height: auto !important;
-
-      object-fit: cover !important;
-
-      border-radius: 10px;
+      display: none !important;
 
     }
 
 
-    /* ============================
+    /* =========================================
+       SCAN GUIDE
+       ========================================= */
+
+    .scan-guide {
+
+      position: absolute;
+
+      left: 50%;
+
+      top: 50%;
+
+      transform: translate(-50%, -50%);
+
+      width: 88%;
+
+      height: 105px;
+
+      border: 2px solid #00ff66;
+
+      border-radius: 8px;
+
+      pointer-events: none;
+
+      box-shadow:
+        0 0 0 9999px rgba(0,0,0,0.25);
+
+      z-index: 20;
+
+    }
+
+
+    .scan-line {
+
+      position: absolute;
+
+      left: 4%;
+
+      width: 92%;
+
+      height: 2px;
+
+      background: #00ff66;
+
+      box-shadow:
+        0 0 8px #00ff66;
+
+      animation:
+        scanLine 1.3s linear infinite;
+
+    }
+
+
+    @keyframes scanLine {
+
+      0% {
+        top: 5%;
+      }
+
+      50% {
+        top: 90%;
+      }
+
+      100% {
+        top: 5%;
+      }
+
+    }
+
+
+    /* =========================================
        RESULT
-       ============================ */
+       ========================================= */
 
     .result {
 
-      margin-top: 12px;
+      margin-top: 10px;
 
-      padding: 15px;
+      padding: 13px;
 
       background: white;
 
       color: #111;
 
-      border-radius: 10px;
+      border-radius: 9px;
 
       text-align: center;
 
@@ -164,7 +241,7 @@
 
     .result-title {
 
-      font-size: 12px;
+      font-size: 11px;
 
       color: #666;
 
@@ -175,7 +252,7 @@
 
     #barcodeResult {
 
-      margin-top: 6px;
+      margin-top: 5px;
 
       font-size: 21px;
 
@@ -188,44 +265,44 @@
     }
 
 
-    /* ============================
+    /* =========================================
        STATUS
-       ============================ */
+       ========================================= */
 
     .status {
 
-      margin-top: 12px;
+      margin-top: 8px;
 
-      padding: 8px;
+      padding: 7px;
 
       text-align: center;
 
       color: #bbb;
 
-      font-size: 13px;
+      font-size: 12px;
 
-      min-height: 32px;
+      min-height: 30px;
 
     }
 
 
-    /* ============================
+    /* =========================================
        BUTTON
-       ============================ */
+       ========================================= */
 
     button {
 
       width: 100%;
 
-      padding: 14px;
+      padding: 13px;
 
-      margin-top: 8px;
+      margin-top: 7px;
 
       border: 0;
 
       border-radius: 8px;
 
-      font-size: 16px;
+      font-size: 15px;
 
       font-weight: bold;
 
@@ -251,109 +328,31 @@
 
       color: white;
 
+      display: none;
+
     }
 
 
     button:disabled {
 
-      opacity: 0.6;
-
-    }
-
-
-    /* ============================
-       SCAN GUIDE
-       ============================ */
-
-    .scan-guide {
-
-      position: absolute;
-
-      left: 50%;
-
-      top: 50%;
-
-      transform: translate(-50%, -50%);
-
-      width: 82%;
-
-      height: 110px;
-
-      border: 2px solid #00ff66;
-
-      border-radius: 8px;
-
-      pointer-events: none;
-
-      box-shadow:
-
-        0 0 0 9999px rgba(0,0,0,0.25);
-
-      z-index: 10;
-
-    }
-
-
-    .scan-line {
-
-      position: absolute;
-
-      left: 5%;
-
-      width: 90%;
-
-      height: 2px;
-
-      background: #00ff66;
-
-      top: 50%;
-
-      box-shadow:
-
-        0 0 8px #00ff66;
-
-      animation: scanLine 1.5s linear infinite;
-
-    }
-
-
-    @keyframes scanLine {
-
-      0% {
-
-        transform: translateY(-45px);
-
-      }
-
-      50% {
-
-        transform: translateY(45px);
-
-      }
-
-      100% {
-
-        transform: translateY(-45px);
-
-      }
+      opacity: 0.55;
 
     }
 
 
     .hint {
 
-      margin-top: 10px;
+      margin-top: 8px;
 
       text-align: center;
 
-      color: #aaa;
+      color: #999;
 
       font-size: 11px;
 
       line-height: 1.5;
 
     }
-
 
   </style>
 
@@ -409,31 +408,37 @@
   </div>
 
 
-  <!-- BUTTON START -->
+  <!-- START -->
 
   <button
     id="start"
+    type="button"
     onclick="startScanner()"
   >
+
     📷 MULAI SCAN
+
   </button>
 
 
-  <!-- BUTTON STOP -->
+  <!-- STOP -->
 
   <button
     id="stop"
+    type="button"
     onclick="stopScanner()"
   >
+
     ❌ TUTUP KAMERA
+
   </button>
 
 
   <div class="hint">
 
-    Arahkan kamera belakang ke barcode.<br>
+    Gunakan kamera belakang.<br>
 
-    Pastikan barcode cukup terang dan tidak terlalu jauh.
+    Dekatkan barcode sampai berada di dalam kotak hijau.
 
   </div>
 
@@ -453,9 +458,11 @@ let scanner = null;
 
 let scanning = false;
 
+let starting = false;
+
 let sudahScan = false;
 
-let starting = false;
+let barcodeTerkirim = false;
 
 
 // =====================================================
@@ -487,6 +494,13 @@ function updateButtons() {
 
   const stop =
     document.getElementById('stop');
+
+
+  if (!start || !stop) {
+
+    return;
+
+  }
 
 
   if (scanning) {
@@ -533,9 +547,11 @@ async function startScanner() {
 
   sudahScan = false;
 
+  barcodeTerkirim = false;
+
 
   status(
-    '📷 Meminta izin kamera...'
+    '📷 Membuka kamera...'
   );
 
 
@@ -546,7 +562,7 @@ async function startScanner() {
 
 
     // =================================================
-    // CEK HTTPS
+    // HTTPS
     // =================================================
 
     if (
@@ -555,14 +571,14 @@ async function startScanner() {
     ) {
 
       throw new Error(
-        'Kamera membutuhkan HTTPS.'
+        'Scanner harus menggunakan HTTPS.'
       );
 
     }
 
 
     // =================================================
-    // CEK CAMERA API
+    // CAMERA API
     // =================================================
 
     if (
@@ -578,14 +594,18 @@ async function startScanner() {
 
 
     // =================================================
-    // BERSIHKAN INSTANCE LAMA
+    // BERSIHKAN SCANNER LAMA
     // =================================================
 
     if (scanner) {
 
       try {
 
-        await scanner.stop();
+        if (scanning) {
+
+          await scanner.stop();
+
+        }
 
       } catch (e) {}
 
@@ -603,7 +623,7 @@ async function startScanner() {
 
 
     // =================================================
-    // BUAT SCANNER
+    // BUAT INSTANCE
     // =================================================
 
     scanner =
@@ -613,109 +633,111 @@ async function startScanner() {
 
 
     // =================================================
-    // KONFIGURASI
+    // FORMAT BARCODE
+    // =================================================
+
+    const formats = [
+
+      Html5QrcodeSupportedFormats.EAN_13,
+
+      Html5QrcodeSupportedFormats.EAN_8,
+
+      Html5QrcodeSupportedFormats.UPC_A,
+
+      Html5QrcodeSupportedFormats.UPC_E,
+
+      Html5QrcodeSupportedFormats.CODE_128,
+
+      Html5QrcodeSupportedFormats.CODE_39,
+
+      Html5QrcodeSupportedFormats.CODE_93,
+
+      Html5QrcodeSupportedFormats.ITF,
+
+      Html5QrcodeSupportedFormats.CODABAR
+
+    ];
+
+
+    // =================================================
+    // CONFIG SCANNER
     // =================================================
 
     const config = {
 
       /*
-       * 15 FPS cukup cepat untuk barcode
-       * tanpa terlalu membebani HP
-       */
-
-      fps: 15,
-
-
-      /*
-       * Area barcode dibuat lebar.
+       * 12 FPS:
        *
-       * Cocok untuk:
-       * EAN
-       * UPC
-       * CODE128
-       * CODE39
+       * cukup cepat untuk barcode
+       * tetapi lebih ringan untuk HP
        */
 
-      qrbox: function(
-        viewfinderWidth,
-        viewfinderHeight
-      ) {
-
-        const width =
-          Math.floor(
-            viewfinderWidth * 0.90
-          );
-
-
-        const height =
-          Math.floor(
-            Math.min(
-              140,
-              viewfinderHeight * 0.32
-            )
-          );
-
-
-        return {
-
-          width:
-            Math.max(
-              250,
-              width
-            ),
-
-          height:
-            Math.max(
-              90,
-              height
-            )
-
-        };
-
-      },
+      fps: 12,
 
 
       /*
-       * Kamera landscape/portrait
+       * Area pembacaan lebar.
+       *
+       * Barcode 1D lebih mudah terbaca.
        */
 
-      aspectRatio:
-        1.7777778,
+      qrbox:
+        function(
+          width,
+          height
+        ) {
+
+          const scanWidth =
+            Math.floor(
+              width * 0.90
+            );
+
+
+          const scanHeight =
+            Math.floor(
+              Math.min(
+                130,
+                height * 0.30
+              )
+            );
+
+
+          return {
+
+            width:
+              Math.max(
+                240,
+                Math.min(
+                  scanWidth,
+                  450
+                )
+              ),
+
+            height:
+              Math.max(
+                90,
+                scanHeight
+              )
+
+          };
+
+        },
 
 
       /*
-       * Jangan flip kamera
+       * Format barcode yang diperbolehkan
+       */
+
+      formatsToSupport:
+        formats,
+
+
+      /*
+       * Jangan flip gambar
        */
 
       disableFlip:
-        false,
-
-
-      /*
-       * Format barcode yang umum
-       */
-
-      formatsToSupport: [
-
-        Html5QrcodeSupportedFormats.EAN_13,
-
-        Html5QrcodeSupportedFormats.EAN_8,
-
-        Html5QrcodeSupportedFormats.UPC_A,
-
-        Html5QrcodeSupportedFormats.UPC_E,
-
-        Html5QrcodeSupportedFormats.CODE_128,
-
-        Html5QrcodeSupportedFormats.CODE_39,
-
-        Html5QrcodeSupportedFormats.CODE_93,
-
-        Html5QrcodeSupportedFormats.ITF,
-
-        Html5QrcodeSupportedFormats.CODABAR
-
-      ]
+        false
 
     };
 
@@ -732,10 +754,10 @@ async function startScanner() {
     await scanner.start(
 
       /*
-       * environment =
-       * kamera belakang
+       * Prioritas kamera belakang.
        *
-       * Ini lebih stabil di Android/iPhone
+       * Tidak menggunakan cameraId
+       * agar kompatibel Android + iPhone.
        */
 
       {
@@ -750,15 +772,14 @@ async function startScanner() {
       config,
 
 
-      /*
-       * SUCCESS
-       */
+      // ===============================================
+      // BARCODE BERHASIL
+      // ===============================================
 
       function(decodedText) {
 
-        if (
-          sudahScan
-        ) {
+
+        if (sudahScan) {
 
           return;
 
@@ -785,19 +806,21 @@ async function startScanner() {
           barcode
         );
 
+
       },
 
 
-      /*
-       * SCAN ERROR
-       *
-       * Jangan tampilkan alert.
-       */
+      // ===============================================
+      // SCAN ERROR
+      // ===============================================
 
       function(errorMessage) {
 
-        // normal scanning error
-        // sengaja diabaikan
+        /*
+         * Jangan tampilkan error scanning
+         * karena callback ini dipanggil terus
+         * saat barcode belum ditemukan.
+         */
 
       }
 
@@ -807,6 +830,9 @@ async function startScanner() {
     status(
       '✓ Kamera aktif - arahkan barcode ke kotak hijau'
     );
+
+
+    updateButtons();
 
 
   } catch (error) {
@@ -855,7 +881,6 @@ function handleCameraError(
 
 
   console.error(
-    'Camera error:',
     name,
     message
   );
@@ -877,13 +902,11 @@ function handleCameraError(
 
       'Android:\n' +
 
-      'Buka Settings → Apps → Chrome → Permissions → Camera → Allow.\n\n' +
+      'Izinkan Camera pada permission browser.\n\n' +
 
       'iPhone:\n' +
 
-      'Settings → Safari → Camera → Allow.\n\n' +
-
-      'Setelah itu buka scanner kembali.'
+      'Settings → Safari → Camera → Allow.'
 
     );
 
@@ -904,7 +927,7 @@ function handleCameraError(
 
 
     alert(
-      'Kamera tidak ditemukan pada perangkat.'
+      'Kamera tidak ditemukan.'
     );
 
 
@@ -927,9 +950,7 @@ function handleCameraError(
 
       'Kamera sedang digunakan aplikasi lain.\n\n' +
 
-      'Tutup aplikasi Camera, WhatsApp, Instagram, ' +
-
-      'atau aplikasi lain yang menggunakan kamera.'
+      'Tutup aplikasi lain yang sedang memakai kamera.'
 
     );
 
@@ -953,7 +974,7 @@ function handleCameraError(
 
       'Akses kamera diblokir browser.\n\n' +
 
-      'Pastikan scanner dibuka menggunakan HTTPS.'
+      'Pastikan scanner menggunakan HTTPS.'
 
     );
 
@@ -1031,7 +1052,7 @@ async function barcodeBerhasil(
     ) {
 
       navigator.vibrate(
-        [80, 40, 80]
+        [70, 40, 70]
       );
 
     }
@@ -1047,7 +1068,7 @@ async function barcodeBerhasil(
 
 
   // =================================================
-  // STOP CAMERA
+  // STOP CAMERA SECEPATNYA
   // =================================================
 
   await stopScanner(
@@ -1067,12 +1088,22 @@ async function barcodeBerhasil(
 
 
 // =====================================================
-// KIRIM BARCODE KE INDEX.HTML
+// KIRIM KE INDEX.HTML
 // =====================================================
 
 function kirimBarcode(
   barcode
 ) {
+
+
+  if (barcodeTerkirim) {
+
+    return;
+
+  }
+
+
+  barcodeTerkirim = true;
 
 
   try {
@@ -1086,6 +1117,8 @@ function kirimBarcode(
       status(
         '⚠ Halaman utama tidak ditemukan'
       );
+
+      barcodeTerkirim = false;
 
       return;
 
@@ -1110,10 +1143,16 @@ function kirimBarcode(
         '⚠ returnOrigin tidak ditemukan'
       );
 
+      barcodeTerkirim = false;
+
       return;
 
     }
 
+
+    // =================================================
+    // KIRIM BARCODE
+    // =================================================
 
     window.opener.postMessage(
 
@@ -1139,7 +1178,7 @@ function kirimBarcode(
 
 
     // =================================================
-    // TUTUP WINDOW SCANNER
+    // TUTUP POPUP
     // =================================================
 
     setTimeout(
@@ -1152,16 +1191,20 @@ function kirimBarcode(
         } catch (e) {}
 
       },
-      400
+      350
     );
 
 
   } catch (error) {
 
+
     console.error(
       'POST MESSAGE ERROR:',
       error
     );
+
+
+    barcodeTerkirim = false;
 
 
     status(
@@ -1172,75 +1215,40 @@ function kirimBarcode(
 
 }
 
-// =====================================================
-// KEMBALI KE HALAMAN INDEX
-// =====================================================
-
-function kembaliKeIndex() {
-
-  try {
-
-    // Jika scanner dibuka sebagai popup
-    // dari halaman Index
-    if (
-      window.opener &&
-      !window.opener.closed
-    ) {
-
-      window.close();
-
-      return;
-
-    }
-
-
-    // Jika window.close() tidak berhasil,
-    // gunakan history browser
-    if (
-      window.history.length > 1
-    ) {
-
-      window.history.back();
-
-      return;
-
-    }
-
-
-    // Fallback
-    window.location.href = 'index.html';
-
-  } catch (error) {
-
-    console.error(
-      'Gagal kembali ke Index:',
-      error
-    );
-
-    window.location.href =
-      'index.html';
-
-  }
-
-}
 
 // =====================================================
-// STOP SCANNER + KEMBALI KE INDEX
+// STOP SCANNER
 // =====================================================
 
 async function stopScanner(
-  kembali = true
+  tampilStatus = true
 ) {
+
 
   starting = false;
 
 
-  // Simpan instance scanner
   const currentScanner =
     scanner;
 
 
-  // Reset state
+  if (!currentScanner) {
+
+    scanning = false;
+
+    updateButtons();
+
+    return;
+
+  }
+
+
+  /*
+   * Lepaskan reference lebih awal
+   * supaya user tidak bisa melakukan
+   * start bersamaan dengan proses stop.
+   */
+
   scanner = null;
 
   scanning = false;
@@ -1249,64 +1257,38 @@ async function stopScanner(
   updateButtons();
 
 
-  // ===============================================
-  // STOP CAMERA
-  // ===============================================
+  try {
 
-  if (currentScanner) {
+    await currentScanner.stop();
 
-    try {
+  } catch (error) {
 
-      await currentScanner.stop();
-
-    } catch (error) {
-
-      console.warn(
-        'STOP CAMERA:',
-        error
-      );
-
-    }
-
-
-    // =============================================
-    // CLEAR CAMERA
-    // =============================================
-
-    try {
-
-      currentScanner.clear();
-
-    } catch (error) {
-
-      console.warn(
-        'CLEAR CAMERA:',
-        error
-      );
-
-    }
+    console.warn(
+      'STOP ERROR:',
+      error
+    );
 
   }
 
 
-  // ===============================================
-  // KEMBALI KE INDEX
-  // ===============================================
+  try {
 
-  if (kembali) {
+    currentScanner.clear();
 
-    status(
-      '✓ Kamera ditutup'
+  } catch (error) {
+
+    console.warn(
+      'CLEAR ERROR:',
+      error
     );
 
+  }
 
-    setTimeout(
-      function() {
 
-        kembaliKeIndex();
+  if (tampilStatus) {
 
-      },
-      150
+    status(
+      'Kamera ditutup'
     );
 
   }
@@ -1385,12 +1367,11 @@ function bunyiScan() {
         } catch (e) {}
 
       },
-      100
-
+      90
     );
 
 
-  } catch (error) {
+  } catch (e) {
 
     console.log(
       'Audio tidak tersedia'
@@ -1409,6 +1390,7 @@ window.addEventListener(
   'load',
   function() {
 
+
     updateButtons();
 
 
@@ -1418,27 +1400,22 @@ window.addEventListener(
         startScanner();
 
       },
-      700
+      500
     );
+
 
   }
 );
 
 
 // =====================================================
-// PAGE HIDDEN
+// VISIBILITY
 // =====================================================
 
 document.addEventListener(
   'visibilitychange',
   function() {
 
-
-    /*
-     * Jika halaman ditinggalkan,
-     * hentikan kamera supaya tidak
-     * tetap menggunakan kamera HP.
-     */
 
     if (
       document.hidden &&
@@ -1462,6 +1439,7 @@ document.addEventListener(
 window.addEventListener(
   'beforeunload',
   function() {
+
 
     if (scanner) {
 
