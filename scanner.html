@@ -13,6 +13,7 @@
   <title>POG Camera Scanner</title>
 
 
+  <!-- HTML5 QR CODE -->
   <script
     src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
   </script>
@@ -26,11 +27,9 @@
 
     body {
       margin: 0;
-
       padding: 15px;
 
       background: #111;
-
       color: white;
 
       font-family: Arial, sans-serif;
@@ -38,7 +37,6 @@
 
     .container {
       width: 100%;
-
       max-width: 500px;
 
       margin: auto;
@@ -46,6 +44,7 @@
 
     h2 {
       text-align: center;
+      margin-bottom: 15px;
     }
 
     #reader {
@@ -75,6 +74,7 @@
     }
 
     #barcodeResult {
+
       margin-top: 5px;
 
       font-size: 22px;
@@ -82,9 +82,11 @@
       font-weight: bold;
 
       word-break: break-all;
+
     }
 
     .status {
+
       margin-top: 15px;
 
       text-align: center;
@@ -92,9 +94,13 @@
       color: #aaa;
 
       font-size: 13px;
+
+      min-height: 20px;
+
     }
 
     button {
+
       width: 100%;
 
       padding: 14px;
@@ -108,18 +114,33 @@
       font-size: 16px;
 
       font-weight: bold;
+
+      cursor: pointer;
+
     }
 
     #start {
+
       background: #0d8a43;
 
       color: white;
+
     }
 
     #stop {
+
       background: #d93025;
 
       color: white;
+
+    }
+
+    button:disabled {
+
+      opacity: 0.5;
+
+      cursor: not-allowed;
+
     }
 
   </style>
@@ -138,9 +159,11 @@
   </h2>
 
 
+  <!-- CAMERA -->
   <div id="reader"></div>
 
 
+  <!-- HASIL BARCODE -->
   <div class="result">
 
     <div>
@@ -154,6 +177,7 @@
   </div>
 
 
+  <!-- STATUS -->
   <div
     id="status"
     class="status"
@@ -162,6 +186,7 @@
   </div>
 
 
+  <!-- START -->
   <button
     id="start"
     onclick="startScanner()"
@@ -170,6 +195,7 @@
   </button>
 
 
+  <!-- STOP -->
   <button
     id="stop"
     onclick="stopScanner()"
@@ -181,8 +207,12 @@
 </div>
 
 
-
 <script>
+
+
+// ==================================================
+// GLOBAL VARIABLE
+// ==================================================
 
 let scanner = null;
 
@@ -191,37 +221,76 @@ let scanning = false;
 let sudahScan = false;
 
 
-// ========================================
+// ==================================================
 // STATUS
-// ========================================
+// ==================================================
 
-function status(text) {
+function setStatus(text) {
 
-  document.getElementById(
-    'status'
-  ).textContent = text;
+  const statusElement =
+    document.getElementById('status');
+
+  if (statusElement) {
+
+    statusElement.textContent = text;
+
+  }
 
 }
 
 
-// ========================================
-// START
-// ========================================
+// ==================================================
+// START SCANNER
+// ==================================================
 
 async function startScanner() {
 
   if (scanning) {
+
     return;
+
   }
+
 
   sudahScan = false;
 
-  status(
+
+  setStatus(
     'Meminta izin kamera...'
   );
 
 
+  const startButton =
+    document.getElementById('start');
+
+  const stopButton =
+    document.getElementById('stop');
+
+
+  startButton.disabled = true;
+
+  stopButton.disabled = false;
+
+
   try {
+
+
+    // ==============================================
+    // CEK SECURE CONTEXT
+    // ==============================================
+
+    if (!window.isSecureContext) {
+
+      throw new Error(
+        'Halaman scanner harus dibuka melalui HTTPS.'
+      );
+
+    }
+
+
+    // ==============================================
+    // CEK SUPPORT KAMERA
+    // ==============================================
 
     if (
       !navigator.mediaDevices ||
@@ -229,25 +298,74 @@ async function startScanner() {
     ) {
 
       throw new Error(
-        'Browser tidak mendukung kamera.'
+        'Browser tidak mendukung akses kamera.'
       );
 
     }
 
 
-    scanner =
-      new Html5Qrcode(
-        'reader'
-      );
+    // ==============================================
+    // BUAT SCANNER
+    // ==============================================
 
+    scanner =
+      new Html5Qrcode('reader');
+
+
+    // ==============================================
+    // KONFIGURASI
+    // ==============================================
 
     const config = {
 
       fps: 10,
 
-      qrbox: {
-        width: 280,
-        height: 120
+      qrbox: function(
+        viewfinderWidth,
+        viewfinderHeight
+      ) {
+
+        const minEdge =
+          Math.min(
+            viewfinderWidth,
+            viewfinderHeight
+          );
+
+
+        const width =
+          Math.floor(
+            minEdge * 0.85
+          );
+
+
+        const height =
+          Math.floor(
+            width * 0.45
+          );
+
+
+        return {
+
+          width:
+            Math.max(
+              220,
+              Math.min(
+                width,
+                400
+              )
+            ),
+
+          height:
+            Math.max(
+              100,
+              Math.min(
+                height,
+                180
+              )
+            )
+
+        };
+
       },
 
       aspectRatio: 1.777778,
@@ -256,6 +374,10 @@ async function startScanner() {
 
     };
 
+
+    // ==============================================
+    // START CAMERA
+    // ==============================================
 
     scanning = true;
 
@@ -271,11 +393,18 @@ async function startScanner() {
 
       function(decodedText) {
 
+
+        // Hindari barcode terbaca berkali-kali
+
         if (sudahScan) {
+
           return;
+
         }
 
+
         sudahScan = true;
+
 
         barcodeBerhasil(
           decodedText
@@ -286,19 +415,26 @@ async function startScanner() {
 
       function(errorMessage) {
 
-        // Abaikan error scanning biasa
+        // Error scanning biasa
+        // sengaja tidak ditampilkan
 
       }
 
     );
 
 
-    status(
+    setStatus(
       '✓ Kamera aktif - arahkan ke barcode'
     );
 
 
+    startButton.disabled = false;
+
+    stopButton.disabled = false;
+
+
   } catch (error) {
+
 
     console.error(
       'CAMERA ERROR:',
@@ -308,14 +444,21 @@ async function startScanner() {
 
     scanning = false;
 
+    scanner = null;
 
-    status(
+
+    startButton.disabled = false;
+
+    stopButton.disabled = false;
+
+
+    setStatus(
       '❌ Kamera gagal dibuka'
     );
 
 
     let pesan =
-      'KAMERA GAGAL DIBUKA\n\n';
+      '📷 KAMERA GAGAL DIBUKA\n\n';
 
 
     if (
@@ -326,29 +469,53 @@ async function startScanner() {
       pesan +=
         'Izin kamera ditolak.\n\n' +
 
-        'Tekan ikon 🔒 pada browser, ' +
-        'kemudian izinkan Camera.';
+        'Silakan buka pengaturan browser ' +
+        'dan izinkan akses Camera.';
 
 
-    } else if (
+    }
+
+    else if (
       error.name ===
       'NotFoundError'
     ) {
 
       pesan +=
-        'Kamera tidak ditemukan.';
+        'Kamera tidak ditemukan.\n\n' +
+
+        'Pastikan perangkat memiliki kamera.';
 
 
-    } else if (
+    }
+
+    else if (
       error.name ===
       'NotReadableError'
     ) {
 
       pesan +=
-        'Kamera sedang digunakan aplikasi lain.';
+        'Kamera sedang digunakan aplikasi lain.\n\n' +
+
+        'Tutup aplikasi Camera, WhatsApp, atau ' +
+        'aplikasi lain yang sedang menggunakan kamera.';
 
 
-    } else {
+    }
+
+    else if (
+      error.name ===
+      'SecurityError'
+    ) {
+
+      pesan +=
+        'Akses kamera diblokir browser.\n\n' +
+
+        'Pastikan scanner dibuka menggunakan HTTPS.';
+
+
+    }
+
+    else {
 
       pesan +=
         (
@@ -367,13 +534,14 @@ async function startScanner() {
 }
 
 
-// ========================================
+// ==================================================
 // BARCODE BERHASIL
-// ========================================
+// ==================================================
 
 async function barcodeBerhasil(
   barcode
 ) {
+
 
   barcode =
     String(
@@ -382,9 +550,15 @@ async function barcodeBerhasil(
 
 
   if (!barcode) {
+
     return;
+
   }
 
+
+  // ==============================================
+  // TAMPILKAN HASIL
+  // ==============================================
 
   document.getElementById(
     'barcodeResult'
@@ -392,95 +566,204 @@ async function barcodeBerhasil(
     barcode;
 
 
-  status(
+  setStatus(
     '✓ Barcode berhasil dibaca'
   );
 
 
-  // Getar HP
+  // ==============================================
+  // GETAR HP
+  // ==============================================
 
   if (
     navigator.vibrate
   ) {
 
-    navigator.vibrate(
-      [100, 50, 100]
-    );
+    try {
+
+      navigator.vibrate(
+        [100, 50, 100]
+      );
+
+    } catch (e) {}
 
   }
 
 
-  // Stop kamera
+  // ==============================================
+  // STOP CAMERA
+  // ==============================================
 
   await stopScanner();
 
 
-  // ====================================
+  // ==============================================
   // KIRIM KE HALAMAN UTAMA
-  // ====================================
+  // ==============================================
+
+  kirimBarcodeKeParent(
+    barcode
+  );
+
+}
+
+
+// ==================================================
+// KIRIM BARCODE KE HALAMAN UTAMA
+// ==================================================
+
+function kirimBarcodeKeParent(
+  barcode
+) {
+
+
+  // ==============================================
+  // CEK WINDOW OPENER
+  // ==============================================
 
   if (
-    window.opener &&
-    !window.opener.closed
+    !window.opener ||
+    window.opener.closed
   ) {
 
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
+    setStatus(
+      '⚠ Halaman utama tidak ditemukan.'
+    );
 
 
-    const returnOrigin =
-      params.get(
-        'returnOrigin'
-      );
+    alert(
+      'Halaman utama POG SCAN tidak ditemukan.\n\n' +
+
+      'Silakan buka scanner melalui tombol ' +
+      '"SCAN BARCODE DENGAN KAMERA" pada aplikasi utama.'
+    );
 
 
-    if (returnOrigin) {
+    return;
 
-      window.opener.postMessage(
-
-        {
-          type:
-            'POG_BARCODE',
-
-          barcode:
-            barcode
-        },
-
-        returnOrigin
-
-      );
+  }
 
 
-      status(
-        '✓ Barcode dikirim ke aplikasi'
-      );
+  // ==============================================
+  // AMBIL RETURN ORIGIN
+  // ==============================================
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
 
 
-      setTimeout(
-        function() {
+  const returnOrigin =
+    params.get(
+      'returnOrigin'
+    );
+
+
+  if (!returnOrigin) {
+
+    setStatus(
+      '⚠ Return origin tidak ditemukan.'
+    );
+
+
+    alert(
+      'Scanner tidak mendapatkan alamat aplikasi utama.'
+    );
+
+
+    return;
+
+  }
+
+
+  // ==============================================
+  // KIRIM POST MESSAGE
+  // ==============================================
+
+  try {
+
+
+    window.opener.postMessage(
+
+      {
+
+        type:
+          'POG_BARCODE',
+
+        barcode:
+          barcode
+
+      },
+
+      returnOrigin
+
+    );
+
+
+    setStatus(
+      '✓ Barcode berhasil dikirim ke aplikasi utama'
+    );
+
+
+    // ============================================
+    // TUTUP WINDOW
+    // ============================================
+
+    setTimeout(
+      function() {
+
+        try {
 
           window.close();
 
-        },
-        500
-      );
+        } catch (e) {
 
-    }
+          console.log(
+            'Window close:',
+            e
+          );
+
+        }
+
+      },
+      500
+    );
+
+
+  } catch (error) {
+
+
+    console.error(
+      'POST MESSAGE ERROR:',
+      error
+    );
+
+
+    setStatus(
+      '❌ Gagal mengirim barcode'
+    );
+
+
+    alert(
+      'Barcode berhasil dibaca tetapi gagal dikirim ' +
+      'ke halaman utama.'
+    );
 
   }
 
 }
 
 
-// ========================================
-// STOP
-// ========================================
+// ==================================================
+// STOP SCANNER
+// ==================================================
 
 async function stopScanner() {
 
+
   try {
+
 
     if (
       scanner &&
@@ -492,19 +775,30 @@ async function stopScanner() {
     }
 
 
-    if (scanner) {
-
-      try {
-
-        scanner.clear();
-
-      } catch (e) {}
-
-    }
-
   } catch (error) {
 
     console.error(
+      'STOP CAMERA ERROR:',
+      error
+    );
+
+  }
+
+
+  try {
+
+
+    if (scanner) {
+
+      scanner.clear();
+
+    }
+
+
+  } catch (error) {
+
+    console.log(
+      'CLEAR SCANNER:',
       error
     );
 
@@ -515,24 +809,44 @@ async function stopScanner() {
 
   scanning = false;
 
+  sudahScan = false;
+
+
+  document.getElementById(
+    'start'
+  ).disabled = false;
+
+
+  document.getElementById(
+    'stop'
+  ).disabled = false;
+
+
 }
 
 
-// ========================================
-// AUTO START
-// ========================================
+// ==================================================
+// AUTO START CAMERA
+// ==================================================
 
 window.addEventListener(
   'load',
   function() {
 
+
     setTimeout(
-      startScanner,
+      function() {
+
+        startScanner();
+
+      },
       500
     );
 
+
   }
 );
+
 
 </script>
 
